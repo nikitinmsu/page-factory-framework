@@ -2,6 +2,7 @@
 @html-plugin
 Feature: Example of using html-plugin
 
+  
   @html
   Scenario: Example of using html-plugin
     * user is on the page "Test Automation Gears HTML"

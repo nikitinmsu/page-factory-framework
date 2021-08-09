@@ -1,4 +1,4 @@
-#language:ru
+ю#language:ru
 @rest-plugin
 Функционал: Тестирование api-сервисов с помощью rest-plugin
 
