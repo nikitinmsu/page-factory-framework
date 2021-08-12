@@ -7,8 +7,7 @@ import ru.sbtqa.tag.pagefactory.Tag;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(monochrome = true, plugin = {"pretty"},
-        glue = {"ru.sbtqa.tag.stepdefs",
-                "ru.sbtqa.tag.pagefactory2example.stepdefs"},
+        glue = {"ru.sbtqa.tag.stepdefs"},
         features = {"src/test/resources/en/features/"}
 )
 public class CucumberTest extends Tag {}

@@ -20,17 +20,6 @@ public class JunitTest {
         steps = WebSteps.getInstance();
     }
 
-    @Test
-    public void webTestTitles() throws PageException {
-        steps.openPage(MainPage.class)
-                .selectRepository("page-factory-2-example");
-        steps.openPage(Pf2ExamplePage.class)
-                .selectBranch("for-example")
-                .openFile("example.txt");
-        steps.openPage(FilePage.class)
-                .validateText("Тестовый текст для примера");
-    }
-
     @AfterClass
     public static void after() {
         CoreSetupSteps.tearDown();
