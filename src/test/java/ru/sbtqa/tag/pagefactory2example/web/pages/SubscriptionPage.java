@@ -1,27 +1,31 @@
 package ru.sbtqa.tag.pagefactory2example.web.pages;
 
-import com.sun.org.apache.xpath.internal.XPath;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import ru.sbtqa.tag.api.junit.ApiSteps;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.sbtqa.tag.pagefactory.WebPage;
-import ru.sbtqa.tag.pagefactory.actions.PageActions;
 import ru.sbtqa.tag.pagefactory.annotations.ActionTitle;
 import ru.sbtqa.tag.pagefactory.annotations.ElementTitle;
 import ru.sbtqa.tag.pagefactory.annotations.PageEntry;
+import ru.sbtqa.tag.pagefactory.environment.Environment;
 import ru.sbtqa.tag.pagefactory2example.stepdefs.Utils.CustomWait;
 
 @PageEntry(title = "ETPSubscription")
 public class SubscriptionPage extends WebPage {
 
-    private static ApiSteps api;
-    private static PageActions actions;
+    WebDriver driver = Environment.getDriverService().getDriver();
 
     @ElementTitle("Add Exchange")
     @FindBy(xpath = "//*[contains(text(),'Add Exchange')]")
     public WebElement addExchange;
+
+    @ElementTitle("Delete selected subscriptions")
+    @FindBy(xpath = "//*[@data-tip='Delete selected subscriptions']")
+    public WebElement DeleteSelectedSubscriptions;
 
     //region Add new Exchange popup window
     @ElementTitle("protocol type")
@@ -65,19 +69,32 @@ public class SubscriptionPage extends WebPage {
     public void selectCheckbox(String number) {
         By locator;
 
-        if(number.equals("Top")){
-            locator = By.xpath("//*/input[@type = \'checkbox\' and @class = \'sc-LzLrl idPkBn\'][1]");
-        }else{
+        if (number.equals("All")) {
+            locator = By.xpath("(//*/input[@type = \'checkbox\' and @class = \'sc-LzLrl idPkBn\'])[1]/../..//*[@data-icon = 'check']");
+        } else {
             Integer numberWithoutTopCheckbox = Integer.parseInt(number) + 1;
-            locator = By.xpath(String.format("//*/input[@type = \'checkbox\' and @class = \'sc-LzLrl idPkBn\'][%s]", numberWithoutTopCheckbox));
+            locator = By.xpath(String.format("(//*/input[@type = \'checkbox\' and @class = \'sc-LzLrl idPkBn\'])[%s]/../..//*[@data-icon = 'check']", numberWithoutTopCheckbox));
         }
 
         try {
-            this.pressCheckBox(locator);
+
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+            element.click();
+
         } catch (org.openqa.selenium.NoSuchElementException e) {
         }
     }
 
+    @ActionTitle("check count of elements in subscription list")
+    public void selectCountOfElements(String expectedCountString) {
+
+        By locator = By.xpath("//*[contains(@class, 'sc-LzLvb')]");
+        int actualCount = driver.findElements(locator).size();
+        int expectedCount = Integer.parseInt(expectedCountString);
+
+        Assert.assertEquals(String.format("Actual Count - %s, expected count - %s", actualCount, expectedCount), actualCount, expectedCount);
+    }
 
 
     private void selectValueFromDropDown(String value, By locator) {
@@ -89,9 +106,9 @@ public class SubscriptionPage extends WebPage {
     }
 
     private void pressCheckBox(By locator) {
-            String checkBoxState = CustomWait.tryGetWebElement(locator).getAttribute("value").trim();
-            CustomWait.tryGetWebElement(locator).click();
-            Assert.assertNotEquals(checkBoxState, CustomWait.tryGetWebElement(locator).getAttribute("value").trim());
+        String checkBoxState = CustomWait.tryGetWebElement(locator).getAttribute("value").trim();
+        CustomWait.tryGetWebElement(locator).click();
+        Assert.assertNotEquals(checkBoxState, CustomWait.tryGetWebElement(locator).getAttribute("value").trim());
 
     }
 

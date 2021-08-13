@@ -47,7 +47,7 @@ Feature: Example of using web-plugin
     Then user (checks text in following item in the list) "FIX 4.3" "2"
 
   @test_3
-  Scenario: Add two subscription and delete second and check list
+  Scenario: Add two subscription and delete all and check list
     #add first subscription
     When user clicks the button "Add Exchange"
     And user (select Protocol type) "FIX 5.0"
@@ -66,5 +66,56 @@ Feature: Example of using web-plugin
     And user clicks the button "subscription add button"
     Then user (checks text in following item in the list) "FIX 4.3" "2"
 
-    Then user (press on following number of checkbox in subscription list) "Top"
-    And waiting 10 seconds
+    When user (press on following number of checkbox in subscription list) "All"
+    And user clicks the button "Delete selected subscriptions"
+    And user (check count of elements in subscription list) "0"
+
+
+  @test_4
+  Scenario: Add two subscription and delete first and check list
+    #add first subscription
+    When user clicks the button "Add Exchange"
+    And user (select Protocol type) "FIX 5.0"
+    Then user checks in the element "protocol type" value "FIX 5.0"
+
+    When user clicks the button "plus number of session"
+    And user clicks the button "subscription add button"
+    Then user (checks text in following item in the list) "FIX 5.0" "1"
+
+    #add second subscription
+    When user clicks the button "Add Exchange"
+    And user (select Protocol type) "FIX 4.3"
+    Then user checks in the element "protocol type" value "FIX 4.3"
+
+    When user clicks the button "plus number of session"
+    And user clicks the button "subscription add button"
+    Then user (checks text in following item in the list) "FIX 4.3" "2"
+
+    When user (press on following number of checkbox in subscription list) "1"
+    And user clicks the button "Delete selected subscriptions"
+    And user (check count of elements in subscription list) "1"
+
+
+  @test_5
+  Scenario: Add two subscription and delete first and check list
+    #add first subscription
+    When user clicks the button "Add Exchange"
+    And user (select Protocol type) "FIX 5.0"
+    Then user checks in the element "protocol type" value "FIX 5.0"
+
+    When user clicks the button "plus number of session"
+    And user clicks the button "subscription add button"
+    Then user (checks text in following item in the list) "FIX 5.0" "1"
+
+    #add second subscription
+    When user clicks the button "Add Exchange"
+    And user (select Protocol type) "FIX 4.3"
+    Then user checks in the element "protocol type" value "FIX 4.3"
+
+    When user clicks the button "plus number of session"
+    And user clicks the button "subscription add button"
+    Then user (checks text in following item in the list) "FIX 4.3" "2"
+
+    When user (press on following number of checkbox in subscription list) "2"
+    And user clicks the button "Delete selected subscriptions"
+    And user (check count of elements in subscription list) "1"
